@@ -1,0 +1,97 @@
+@Metadata.layer: #CUSTOMER
+
+@UI: {
+    headerInfo: {
+        typeName: 'Certificado',
+        typeNamePlural: 'Certificados',
+        imageUrl: 'Icon',
+        title: { label: 'Certificado', value: 'Matnr', type: #STANDARD } }
+}
+
+annotate entity ZC_CJRAP_CERTIFPRODUCT with
+{
+
+  @UI.facet: [{
+      purpose: #HEADER,
+      type: #FIELDGROUP_REFERENCE,
+      importance: #HIGH,
+      position: 1,
+      label: 'Informações Técnicas',
+      targetQualifier: 'HeaderData'},
+      
+   { id: 'Certificate',
+     purpose: #STANDARD,
+     type: #IDENTIFICATION_REFERENCE,
+     label: 'Gerenciamento do Certificado',
+     position: 10 },
+     
+   { purpose: #STANDARD,
+     type: #FIELDGROUP_REFERENCE,
+     importance: #HIGH,
+     position: 20,
+     targetQualifier: 'Detail',
+     label: 'Detalhes' },
+     
+   { id: 'CertificateState',
+     purpose: #STANDARD,
+     type: #LINEITEM_REFERENCE,
+     label: 'Modificaões de Status',
+     position: 20,
+     targetElement: '_Stats' }
+  ]
+
+  //  @UI.selectionField: [{ position: 10 }]
+  //  @UI.lineItem: [{ position: 10 }]
+  //  @EndUserText.label: 'Certificado'
+  @UI.hidden: true
+  CertUuid;
+
+  @UI.selectionField: [{ position: 20 }]
+  @UI.identification: [{ position: 20 },
+                       { type: #FOR_ACTION, dataAction: 'NewVersion', label: 'Nova Versão' },
+                       { type: #FOR_ACTION, dataAction: 'ActiveVersion', label: 'Ativar Versão' },
+                       { type: #FOR_ACTION, dataAction: 'InactiveVersion', label: 'Inativar Versão' }]
+  @UI.lineItem: [{ position: 20 },
+                 { type: #FOR_ACTION, dataAction: 'NewVersion', label: 'Nova Versão' }]
+  @EndUserText.label: 'Material'
+  Matnr;
+
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem: [{ position: 30 }]
+  @UI.fieldGroup: [{ qualifier: 'Detail' }]
+  @EndUserText.label: 'Descrição'
+  Description;
+
+  @UI.identification: [{ position: 30 }]
+  @UI.lineItem: [{ position: 31 }]
+  @UI.fieldGroup: [{ qualifier: 'HeaderData' }]
+  @EndUserText.label: 'Versão'
+  Version;
+  
+  @UI.identification: [{ position: 31 }]
+  @UI.lineItem: [{ position: 31 }]
+  @UI.fieldGroup: [{ qualifier: 'HeaderData' }]
+  @EndUserText.label: 'Status'
+  CertStatus;
+
+  @UI.identification: [{ position: 40 }]
+  @EndUserText.label: 'Certificado CE'
+  CertCe;
+
+  @UI.identification: [{ position: 50 }]
+  @EndUserText.label: 'Certificado  FCC'
+  CertFcc;
+
+  @UI.identification: [{ position: 60 }]
+  @EndUserText.label: 'Certificado GS'
+  CertGs;
+
+  @UI.identification: [{ position: 70 }]
+  @EndUserText.label: 'Certificado ISO'
+  CertIso;
+
+  @UI.identification: [{ position: 80 }]
+  @EndUserText.label: 'Certificado TUEV'
+  CertTuev;
+
+}

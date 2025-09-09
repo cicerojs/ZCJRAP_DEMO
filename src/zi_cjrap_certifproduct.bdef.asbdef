@@ -1,0 +1,77 @@
+managed implementation in class zbp_i_cjrap_certifproduct unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_CJRAP_CERTIFPRODUCT alias Certificate
+persistent table zcjrap_certif
+draft table zbcjrap_certif
+lock master total etag LocalLastChangedAt
+authorization master ( instance )
+//etag master <field_name>
+{
+  create ( authorization : global );
+  update;
+  delete;
+
+  association _Stats { create; with draft; }
+
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  determination setInitialValues on modify { create; }
+
+  validation checkMaterial on save { field Matnr; create; update; }
+
+  action ( features : instance ) NewVersion result [1] $self;
+  action ( features : instance ) ActiveVersion result [1] $self;
+  action ( features : instance ) InactiveVersion result [1] $self;
+
+  field ( numbering : managed, readonly ) CertUuid;
+  field ( readonly ) Description, Version;
+  field ( mandatory ) Matnr;
+
+  mapping for zcjrap_certif
+    {
+      CertUuid           = cert_uuid;
+      Matnr              = matnr;
+      Version            = version;
+      CertStatus         = cert_status;
+      CertCe             = cert_ce;
+      CertGs             = cert_gs;
+      CertFcc            = cert_fcc;
+      CertIso            = cert_iso;
+      CertTuev           = cert_tuev;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
+
+define behavior for ZI_CJRAP_CERTIFSTPRODUCT alias CertificateST
+persistent table zcjrap_certif_st
+draft table zbcjrap_certifst
+lock dependent by _Certif
+authorization dependent by _Certif
+//etag master <field_name>
+{
+  delete;
+
+  field ( readonly ) CertUuid;
+  field ( numbering : managed, readonly ) StateUuid;
+
+  mapping for zcjrap_certif_st
+    {
+      StateUuid          = state_uuid;
+      CertUuid           = cert_uuid;
+      Matnr              = matnr;
+      Version            = version;
+      Status             = status;
+      StatusOld          = status_old;
+      LastChangedBy      = last_changed_by;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+
+  association _Certif;
+}
