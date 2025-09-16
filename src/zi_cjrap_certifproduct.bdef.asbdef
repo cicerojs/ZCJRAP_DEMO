@@ -6,7 +6,7 @@ define behavior for ZI_CJRAP_CERTIFPRODUCT alias Certificate
 persistent table zcjrap_certif
 draft table zbcjrap_certif
 lock master total etag LocalLastChangedAt
-authorization master ( instance )
+authorization master ( global, instance )
 //etag master <field_name>
 {
   create ( authorization : global );

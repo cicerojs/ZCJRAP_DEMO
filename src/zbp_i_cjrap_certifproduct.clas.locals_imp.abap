@@ -34,9 +34,36 @@ ENDCLASS.
 CLASS lhc_Certificate IMPLEMENTATION.
 
   METHOD get_instance_authorizations.
+
+    READ ENTITIES OF zi_cjrap_certifproduct IN LOCAL MODE
+       ENTITY Certificate
+       FIELDS ( Version )
+       WITH CORRESPONDING #( Keys )
+       RESULT DATA(lt_certificates).
+
+    LOOP AT lt_certificates INTO DATA(ls_certificates).
+      APPEND VALUE #( LET upd_auth = COND #( WHEN ls_certificates-Version = 2
+                                             THEN if_abap_behv=>auth-unauthorized
+                                             ELSE if_abap_behv=>auth-allowed )
+                          del_auth = if_abap_behv=>auth-unauthorized
+                      IN
+                          %tky = ls_certificates-%tky
+                          %update = upd_auth
+                          %action-Edit = upd_auth
+                          %action-NewVersion = upd_auth
+                          %delete = upd_auth
+                     ) TO result.
+    ENDLOOP.
+
   ENDMETHOD.
 
   METHOD get_global_authorizations.
+
+*    IF requested_authorizations-%create = if_abap_behv=>mk-on.
+*        "Authority check aqui...
+*        result-%create = if_abap_behv=>auth-unauthorized.
+*    ENDIF.
+
   ENDMETHOD.
 
   METHOD setInitialValues.
